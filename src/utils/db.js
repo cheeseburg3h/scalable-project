@@ -8,10 +8,10 @@ const connect = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Mongo connection successful")
+    console.log("Mongo connection successful");
   } catch(error) {
-    throw new Error("Error connecting to Mongoose")
+    throw new Error("Error connecting to Mongoose");
   }
-}
+};
 
 export default connect;

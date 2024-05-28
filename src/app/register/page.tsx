@@ -27,10 +27,10 @@ const Register = () => {
     }
 
     try {
-      const res = await fetch("api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: {
-          "Content-Type": "applicaiton/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email,
@@ -40,9 +40,9 @@ const Register = () => {
       if (res.status === 400) {
         setError("This email is already registered");
       }
-      if (res.status === 200) {
+      if (res.status === 201) {
         setError("");
-        router.push("/login");
+        router.push("/src/app/login");
       }
     } catch (error) {
       setError("Error, try again");

@@ -28,7 +28,7 @@ export default function ProfilePage() {
               <div className="w-16 h-16 rounded-full bg-gray-400"></div>
               <div className="ml-4">
                 <h2 className="text-xl font-semibold">{session.user.name}</h2>
-                <p className="text-sm">User ID: {session.userId}</p>
+                <p className="text-sm">User ID: {session.user._id}</p>
               </div>
             </div>
             <div className="mb-4">

@@ -15,21 +15,16 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await signIn("credentials", {
-        email,
-        password,   
-        redirect: false,
-      });
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
 
-      if (res.error) {
-        setError("Invalid Credentials");
-        return;
-      }
-
-      router.replace("dashboard");
-    } catch (error) {
-      console.log(error);
+    if (result.error) {
+      setError(result.error);
+    } else {
+      router.push("/profile-page");
     }
   };
 

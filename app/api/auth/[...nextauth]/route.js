@@ -9,7 +9,6 @@ export const authOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {},
-
       async authorize(credentials) {
         const { email, password } = credentials;
 
@@ -18,18 +17,19 @@ export const authOptions = {
           const user = await User.findOne({ email });
 
           if (!user) {
-            return null;
+            throw new Error("No user found with this email");
           }
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (!passwordsMatch) {
-            return null;
+            throw new Error("Incorrect password");
           }
 
-          return user;
+          return { id: user._id, name: user.name, email: user.email };
         } catch (error) {
-          console.log("Error: ", error);
+          console.error("Error in authorize: ", error);
+          throw new Error("Authorization failed");
         }
       },
     }),
@@ -37,10 +37,29 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+      }
+      return session;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/",
+    signIn: "/login",
   },
+  debug: true, //cek debug jaga2 biar ada message
 };
 
 const handler = NextAuth(authOptions);

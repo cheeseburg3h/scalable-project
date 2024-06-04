@@ -68,21 +68,21 @@ export default function RegisterForm() {
           <input
             onChange={(e) => setName(e.target.value)}
             type="text"
-            className="w-full border border-gray-300 text-white rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
+            className="w-full border border-gray-300 text-black rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
             placeholder="Full Name"
             required
           />
           <input
             onChange={(e) => setEmail(e.target.value)}
             type="text"
-            className="w-full border border-gray-300 text-white rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
+            className="w-full border border-gray-300 text-black rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
             placeholder="Email"
             required
           />
           <input
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            className="w-full border border-gray-300 text-white rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
+            className="w-full border border-gray-300 text-black rounded px-3 py-2 mb-4 focus:outline-none focus:border-blue-400 focus:text-black"
             placeholder="Password"
             required
           />
@@ -104,6 +104,13 @@ export default function RegisterForm() {
         >
           Already have an account? Login
         </Link>
+        <Link
+          className="block text-center text-blue-500 hover:underline mt-2"
+          href="/profile-page"
+        >
+          Go to Profile Page
+        </Link>
+
       </div>
     </div>
   );

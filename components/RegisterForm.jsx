@@ -104,12 +104,12 @@ export default function RegisterForm() {
         >
           Already have an account? Login
         </Link>
-        <Link
+        {/* <Link
           className="block text-center text-blue-500 hover:underline mt-2"
           href="/profile-page"
         >
           Go to Profile Page
-        </Link>
+        </Link> */}
 
       </div>
     </div>

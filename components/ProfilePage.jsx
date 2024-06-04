@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
@@ -18,6 +18,10 @@ export default function ProfilePage() {
     return <div>Loading...</div>;
   }
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/' });
+  };
+
   return (
     <div className="min-h-screen bg-purple-200 flex items-center justify-center">
       <div className="bg-purple-200 p-8 rounded shadow-md w-full max-w-4xl">
@@ -27,8 +31,8 @@ export default function ProfilePage() {
             <div className="flex items-center mb-4">
               <div className="w-16 h-16 rounded-full bg-gray-400"></div>
               <div className="ml-4">
-                <h2 className="text-xl font-semibold">{session.user.name}</h2>
-                <p className="text-sm">User ID: {session.user._id}</p>
+                <h2 className="text-xl font-semibold">{session?.user?.name}</h2>
+                <p className="text-sm">User ID: {session?.userId}</p>
               </div>
             </div>
             <div className="mb-4">
@@ -82,6 +86,12 @@ export default function ProfilePage() {
             <div className="h-64 bg-gray-200 rounded mt-2"></div>
           </div>
         </div>
+        <button 
+          onClick={handleLogout} 
+          className="mt-8 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

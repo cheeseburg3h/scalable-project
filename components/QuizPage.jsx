@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 
 export default function QuizPage() {
   const { data: session, status } = useSession();
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
+  const [customId, setCustomId] = useState("");
   const [quizTitle, setQuizTitle] = useState("");
   const [questions, setQuestions] = useState([
     { question: "", options: ["", "", "", ""], correctAnswer: "" },
   ]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
+  const handleCustomIdChange = (e) => {
+    setCustomId(e.target.value);
+  };
 
   const handleQuizTitleChange = (e) => {
     setQuizTitle(e.target.value);
@@ -48,7 +53,7 @@ export default function QuizPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!quizTitle || questions.some(q => !q.question || q.options.some(o => !o) || !q.correctAnswer)) {
+    if (!customId || !quizTitle || questions.some(q => !q.question || q.options.some(o => !o) || !q.correctAnswer)) {
       setError("Please fill in all fields");
       return;
     }
@@ -59,23 +64,28 @@ export default function QuizPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title: quizTitle, questions }),
+        body: JSON.stringify({ customId, title: quizTitle, questions }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Something went wrong");
+        throw new Error(data.message || "Something went wrong");
       }
 
-      const data = await res.json();
       setMessage("Quiz created successfully");
       setError("");
+      setCustomId("");
       setQuizTitle("");
       setQuestions([{ question: "", options: ["", "", "", ""], correctAnswer: "" }]);
     } catch (error) {
       setError(error.message);
       setMessage("");
     }
+  };
+
+  const handleBackToProfile = () => {
+    router.push("/profile-page");
   };
 
   if (status === "loading") {
@@ -92,6 +102,19 @@ export default function QuizPage() {
       <form onSubmit={handleSubmit} className="w-full max-w-2xl bg-white p-8 rounded shadow-md">
         {error && <div className="bg-red-500 text-white p-2 rounded mb-4">{error}</div>}
         {message && <div className="bg-green-500 text-white p-2 rounded mb-4">{message}</div>}
+        <div className="mb-6">
+          <label htmlFor="customId" className="block text-xl font-semibold mb-2">
+            Custom ID
+          </label>
+          <input
+            id="customId"
+            type="text"
+            value={customId}
+            onChange={handleCustomIdChange}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            required
+          />
+        </div>
         <div className="mb-6">
           <label htmlFor="quizTitle" className="block text-xl font-semibold mb-2">
             Quiz Title
@@ -163,13 +186,14 @@ export default function QuizPage() {
         >
           Save Quiz
         </button>
+        <button
+          type="button"
+          onClick={handleBackToProfile}
+          className="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600 mt-4"
+        >
+          Back to Profile
+        </button>
       </form>
-      <button
-        onClick={() => router.push('/profile-page')}
-        className="mt-4 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-      >
-        Back to Profile Page
-      </button>
     </div>
   );
 }

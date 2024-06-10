@@ -1,13 +1,13 @@
-import { connectMongoDB } from "@/lib/mongodb";
-import User from "@/models/user";
-import NextAuth from "next-auth/next";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
+import User from '@/models/user';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { connectMongoDB } from '@/lib/mongodb';
 
 export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: 'credentials',
       credentials: {},
       async authorize(credentials) {
         const { email, password } = credentials;
@@ -17,25 +17,25 @@ export const authOptions = {
           const user = await User.findOne({ email });
 
           if (!user) {
-            throw new Error("No user found with this email");
+            throw new Error('No user found with this email');
           }
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (!passwordsMatch) {
-            throw new Error("Incorrect password");
+            throw new Error('Incorrect password');
           }
 
           return { id: user._id, name: user.name, email: user.email };
         } catch (error) {
-          console.error("Error in authorize:", error);
-          throw new Error("Authorization failed");
+          console.error('Error in authorize:', error);
+          throw new Error('Authorization failed');
         }
       },
     }),
   ],
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -57,7 +57,7 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
   debug: true,
 };

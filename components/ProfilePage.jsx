@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -8,12 +8,35 @@ import Link from "next/link";
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
+    } else if (status === "authenticated") {
+      fetchQuizzes();
     }
   }, [status, router]);
+
+  const fetchQuizzes = async () => {
+    try {
+      const res = await fetch("/api/quizzes/get", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch quizzes");
+      }
+
+      const data = await res.json();
+      setQuizzes(data.quizzes);
+    } catch (error) {
+      console.error("Error fetching quizzes:", error);
+    }
+  };
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -84,7 +107,17 @@ export default function ProfilePage() {
           </div>
           <div className="bg-purple-300 p-4 rounded shadow-md col-span-3">
             <h3 className="text-lg font-semibold text-center">Upcoming Quizzes</h3>
-            <div className="h-64 bg-gray-200 rounded mt-2"></div>
+            <div className="h-64 bg-gray-200 rounded mt-2 overflow-auto">
+              {quizzes.length > 0 ? (
+                quizzes.map((quiz, index) => (
+                  <div key={index} className="bg-gray-400 text-white py-2 px-4 rounded mt-2">
+                    {quiz.title}
+                  </div>
+                ))
+              ) : (
+                <div className="text-center text-gray-500 py-8">No upcoming quizzes</div>
+              )}
+            </div>
           </div>
         </div>
         <Link href="/quiz-page" className="block text-center text-blue-500 hover:underline mt-4">

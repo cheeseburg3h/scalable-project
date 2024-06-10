@@ -28,7 +28,7 @@ export const authOptions = {
 
           return { id: user._id, name: user.name, email: user.email };
         } catch (error) {
-          console.error("Error in authorize: ", error);
+          console.error("Error in authorize:", error);
           throw new Error("Authorization failed");
         }
       },
@@ -59,7 +59,7 @@ export const authOptions = {
   pages: {
     signIn: "/login",
   },
-  debug: true, //cek debug jaga2 biar ada message
+  debug: true,
 };
 
 const handler = NextAuth(authOptions);

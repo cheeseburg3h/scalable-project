@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
@@ -86,8 +87,11 @@ export default function ProfilePage() {
             <div className="h-64 bg-gray-200 rounded mt-2"></div>
           </div>
         </div>
-        <button 
-          onClick={handleLogout} 
+        <Link href="/quiz-page" className="block text-center text-blue-500 hover:underline mt-4">
+          Create or Edit a Quiz
+        </Link>
+        <button
+          onClick={handleLogout}
           className="mt-8 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
         >
           Logout

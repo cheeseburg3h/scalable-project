@@ -14,7 +14,7 @@ export async function GET(req) {
 
     await connectMongoDB();
 
-    const quizzes = await Quiz.find({ createdBy: session.user.email }).select('title');
+    const quizzes = await Quiz.find({ createdBy: session.user.email }).sort({ createdAt: -1 }).limit(4); // Sort by creation date and limit to 4
 
     return new NextResponse(JSON.stringify({ quizzes }), { status: 200 });
   } catch (error) {

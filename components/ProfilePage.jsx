@@ -62,14 +62,16 @@ export default function ProfilePage() {
             <div className="mb-4">
               <h3 className="text-lg font-semibold">Current Quiz</h3>
               <div className="bg-gray-400 text-white py-2 px-4 rounded mt-2">
-                Addition SP
+                {quizzes.length > 0 ? quizzes[0].title : "No current quiz"}
               </div>
             </div>
             <div>
               <h3 className="text-lg font-semibold">Recent Quizzes</h3>
-              <div className="bg-gray-400 text-white py-2 px-4 rounded mt-2">Addition 1</div>
-              <div className="bg-gray-400 text-white py-2 px-4 rounded mt-2">Addition 2</div>
-              <div className="bg-gray-400 text-white py-2 px-4 rounded mt-2">Addition 3</div>
+              {quizzes.slice(1).map((quiz, index) => (
+                <div key={index} className="bg-gray-400 text-white py-2 px-4 rounded mt-2">
+                  {quiz.title}
+                </div>
+              ))}
             </div>
           </div>
           <div className="bg-purple-300 p-4 rounded shadow-md col-span-2">

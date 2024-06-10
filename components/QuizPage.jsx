@@ -60,12 +60,12 @@ export default function QuizPage() {
         body: JSON.stringify({ title: quizTitle, questions }),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        throw new Error(data.message || "Something went wrong");
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Something went wrong");
       }
 
+      const data = await res.json();
       setMessage("Quiz created successfully");
       setError("");
       setQuizTitle("");

@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 export default function QuizPage() {
   const { data: session, status } = useSession();
+  const router = useRouter(); // Initialize the router
   const [quizTitle, setQuizTitle] = useState("");
   const [questions, setQuestions] = useState([
     { question: "", options: ["", "", "", ""], correctAnswer: "" },
@@ -162,6 +164,12 @@ export default function QuizPage() {
           Save Quiz
         </button>
       </form>
+      <button
+        onClick={() => router.push('/profile-page')}
+        className="mt-4 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+      >
+        Back to Profile Page
+      </button>
     </div>
   );
 }

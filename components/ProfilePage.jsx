@@ -20,16 +20,18 @@ export default function ProfilePage() {
 
   const fetchQuizzes = async () => {
     try {
-      const res = await fetch("/api/quizzes");
+      const res = await fetch("/api/quizzes/get");
       const data = await res.json();
-      setQuizzes(data.quizzes);
+      if (data.quizzes) {
+        setQuizzes(data.quizzes);
+      }
     } catch (error) {
       console.error("Error fetching quizzes:", error);
     }
   };
 
   const handleLogout = () => {
-    signOut({ callbackUrl: '/' });
+    signOut({ callbackUrl: "/" });
   };
 
   const handleQuizClick = (customId) => {
@@ -50,49 +52,79 @@ export default function ProfilePage() {
               <div className="w-16 h-16 rounded-full bg-gray-400"></div>
               <div className="ml-4">
                 <h2 className="text-xl font-semibold">{session?.user?.name}</h2>
-                <p className="text-sm">User ID: {session?.userId}</p>
+                <p className="text-sm">User ID: {session?.user?.email}</p>
               </div>
             </div>
             <div className="mb-4">
               <h3 className="text-lg font-semibold">Current Quiz</h3>
-              {quizzes.length > 0 && (
+              {quizzes.length > 0 ? (
                 <div
                   className="bg-gray-400 text-white py-2 px-4 rounded mt-2 cursor-pointer"
                   onClick={() => handleQuizClick(quizzes[0].customId)}
                 >
                   {quizzes[0].title}
                 </div>
+              ) : (
+                <p>No quizzes available</p>
               )}
             </div>
             <div>
               <h3 className="text-lg font-semibold">Recent Quizzes</h3>
-              {quizzes.slice(1, 4).map((quiz, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-400 text-white py-2 px-4 rounded mt-2 cursor-pointer"
-                  onClick={() => handleQuizClick(quiz.customId)}
-                >
-                  {quiz.title}
-                </div>
-              ))}
+              {quizzes.slice(1, 4).length > 0 ? (
+                quizzes.slice(1, 4).map((quiz, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-400 text-white py-2 px-4 rounded mt-2 cursor-pointer"
+                    onClick={() => handleQuizClick(quiz.customId)}
+                  >
+                    {quiz.title}
+                  </div>
+                ))
+              ) : (
+                <p>No recent quizzes</p>
+              )}
             </div>
           </div>
           <div className="bg-purple-300 p-4 rounded shadow-md col-span-2">
             <h3 className="text-lg font-semibold text-center">All time score</h3>
-            {/* Scores can be added here */}
+            {/* Replace with your existing code for scores */}
+            <div className="my-4">
+              <div className="flex justify-between">
+                <span>Sample Quiz 1</span>
+                <a href="#" className="text-blue-500">Review</a>
+              </div>
+              <div className="bg-gray-400 h-6 rounded-full overflow-hidden mt-1">
+                <div className="bg-green-500 h-full" style={{ width: "80%" }}></div>
+                <div className="bg-red-500 h-full" style={{ width: "20%" }}></div>
+              </div>
+            </div>
+            <div className="my-4">
+              <div className="flex justify-between">
+                <span>Sample Quiz 2</span>
+                <a href="#" className="text-blue-500">Review</a>
+              </div>
+              <div className="bg-gray-400 h-6 rounded-full overflow-hidden mt-1">
+                <div className="bg-green-500 h-full" style={{ width: "70%" }}></div>
+                <div className="bg-red-500 h-full" style={{ width: "30%" }}></div>
+              </div>
+            </div>
           </div>
           <div className="bg-purple-300 p-4 rounded shadow-md col-span-3">
             <h3 className="text-lg font-semibold text-center">Upcoming Quizzes</h3>
             <div className="h-64 bg-gray-200 rounded mt-2">
-              {quizzes.length > 0 && quizzes.map((quiz, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-400 text-white py-2 px-4 rounded mt-2 cursor-pointer"
-                  onClick={() => handleQuizClick(quiz.customId)}
-                >
-                  {quiz.title}
-                </div>
-              ))}
+              {quizzes.length > 0 ? (
+                quizzes.map((quiz, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-400 text-white py-2 px-4 rounded mt-2 cursor-pointer"
+                    onClick={() => handleQuizClick(quiz.customId)}
+                  >
+                    {quiz.title}
+                  </div>
+                ))
+              ) : (
+                <p>No upcoming quizzes</p>
+              )}
             </div>
           </div>
         </div>

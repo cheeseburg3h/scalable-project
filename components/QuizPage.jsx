@@ -84,10 +84,6 @@ export default function QuizPage() {
     }
   };
 
-  const handleBackToProfile = () => {
-    router.push("/profile-page");
-  };
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -188,7 +184,7 @@ export default function QuizPage() {
         </button>
         <button
           type="button"
-          onClick={handleBackToProfile}
+          onClick={() => router.push("/profile-page")}
           className="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600 mt-4"
         >
           Back to Profile
@@ -197,3 +193,4 @@ export default function QuizPage() {
     </div>
   );
 }
+

@@ -1,24 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function QuizPage() {
-  const searchParams = useSearchParams();
-  const customId = searchParams.get("customId");
+  const router = useRouter();
+  const [customId, setCustomId] = useState(null);
   const [quiz, setQuiz] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { customId } = router.query;
+    setCustomId(customId);
+  }, [router.isReady, router.query]);
 
   useEffect(() => {
     if (customId) {
       fetch(`/api/quizzes/${customId}`)
         .then((res) => res.json())
-        .then((data) => setQuiz(data.quiz))
-        .catch((error) => console.error("Error fetching quiz:", error));
+        .then((data) => {
+          setQuiz(data.quiz);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching quiz:", error);
+          setLoading(false);
+        });
     }
   }, [customId]);
 
-  if (!quiz) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (!quiz) {
+    return <div>Quiz not found</div>;
   }
 
   return (
